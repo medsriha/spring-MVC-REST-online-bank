@@ -1,0 +1,68 @@
+Started phase 0, duration: 15s @ 00:27:56(-0500) 2018-02-19
+Report @ 00:28:06(-0500) 2018-02-19
+  Scenarios launched:  231
+  Scenarios completed: 213
+  Requests completed:  2406
+  Concurrent users:    17
+  RPS sent: 241.38
+  Request latency:
+    min: 2.2
+    max: 585.7
+    median: 32.6
+    p95: 139.5
+    p99: 264.2
+  Scenario duration:
+    min: 390.1
+    max: 1894.2
+    median: 693.9
+    p95: 1724.2
+    p99: 1854.6
+  Codes:
+    200: 2405
+    500: 1
+
+Report @ 00:28:15(-0500) 2018-02-19
+  Scenarios launched:  269
+  Scenarios completed: 286
+  Requests completed:  3088
+  RPS sent: 348.81
+  Request latency:
+    min: 1
+    max: 241
+    median: 19.2
+    p95: 86
+    p99: 141.4
+  Scenario duration:
+    min: 269.6
+    max: 732.5
+    median: 522.5
+    p95: 667.8
+    p99: 707.5
+  Codes:
+    200: 3088
+
+All virtual users finished
+Summary report @ 00:28:15(-0500) 2018-02-19
+  Scenarios launched:  500
+  Scenarios completed: 499
+  Requests completed:  5494
+  RPS sent: 290.38
+  Request latency:
+    min: 1
+    max: 585.7
+    median: 24.3
+    p95: 109.2
+    p99: 215.5
+  Scenario duration:
+    min: 269.6
+    max: 1894.2
+    median: 560.5
+    p95: 1201
+    p99: 1806.6
+  Scenario counts:
+    employee functions: 500 (100%)
+  Codes:
+    200: 5493
+    500: 1
+
+Log file: result.json

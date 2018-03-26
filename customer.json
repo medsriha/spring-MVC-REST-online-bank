@@ -1,0 +1,235 @@
+{
+  "config": {
+    "environments": {
+      "dev": {
+        "phases": [
+          {
+            "arrivalRate": 1,
+            "duration": 1
+          }
+        ]
+      },
+      "production": {
+        "phases": [
+          {
+            "arrivalCount": 50,
+            "duration": 15
+          }
+        ]
+      }
+    },
+    "payload": [
+      {
+        "fields": [
+          "fname",
+          "lname",
+          "address",
+          "city",
+          "state",
+          "zip",
+          "email",
+          "username",
+          "password"
+        ],
+        "order": "sequence",
+        "path": "csv/UserData.csv"
+      },
+      {
+        "fields": [
+          "cash"
+        ],
+        "order": "sequence",
+        "path": "csv/deposit.csv"
+      },
+      {
+        "fields": [
+          "name",
+          "symbol",
+          "initial_value"
+        ],
+        "order": "sequence",
+        "path": "csv/Portfolio.csv"
+      },
+      {
+        "fields": [
+          "cashValue"
+        ],
+        "order": "sequence",
+        "path": "csv/buyFund.csv"
+      }
+    ],
+    "target": "http://localhost:8080"
+  },
+  "scenarios": [
+    {
+      "flow": [
+        {
+          "post": {
+            "json": {
+              "password": "{{password}}",
+              "username": "{{{username}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "Welcome {{{fname}}}"
+            },
+            "url": "/login"
+          }
+        },
+        {
+          "get": {
+            "match": {
+              "json": "$.message",
+              "value": "You don’t have any funds in your Portfolio"
+            },
+            "url": "/viewPortfolio"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "cashValue": "{{{cashValue}}}",
+              "symbol": "randominvaldfundcanneverexist123"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The fund you provided does not exist"
+            },
+            "url": "/buyFund"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "cashValue": "{{{cashValue}}}",
+              "symbol": "{{symbol}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The fund has been successfully purchased"
+            },
+            "url": "/buyFund"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "numShares": "10000000",
+              "symbol": "{{{symbol}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "You don’t have that many shares in your portfolio"
+            },
+            "url": "/sellFund"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "numShares": "2",
+              "symbol": "randominvaldfundcanneverexist123"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The fund you provided does not exist"
+            },
+            "url": "/sellFund"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "numShares": "1",
+              "symbol": "{{{symbol}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The shares have been successfully sold"
+            },
+            "url": "/sellFund"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "cashValue": "{{{cash}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The check has been successfully requested"
+            },
+            "url": "/requestCheck"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "cash": "{{{cash}}}",
+              "username": "{{{username}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "You must be an employee to perform this action"
+            },
+            "url": "/depositCheck"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "address": "{{{address}}}",
+              "cash": "10",
+              "city": "{{{city}}}",
+              "email": "{{{email}}}",
+              "fname": "{{{fname}}}",
+              "lname": "{{lname}}",
+              "password": "{{password}}",
+              "state": "{{{state}}}",
+              "username": "{{{username}}}",
+              "zip": "{{{zip}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "You must be an employee to perform this action"
+            },
+            "url": "/createCustomerAccount"
+          }
+        },
+        {
+          "post": {
+            "json": {
+              "initial_value": "{{{initial_value}}}",
+              "name": "{{{name}}}",
+              "symbol": "{{{symbol}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "You must be an employee to perform this action"
+            },
+            "url": "/createFund"
+          }
+        },
+        {
+          "post": {
+            "match": {
+              "json": "$.message",
+              "value": "You must be an employee to perform this action"
+            },
+            "url": "/transitionDay"
+          }
+        },
+        {
+          "post": {
+            "match": {
+              "json": "$.message",
+              "value": "You have been successfully logged out"
+            },
+            "url": "/logout"
+          }
+        }
+      ],
+      "name": "customer functions"
+    }
+  ]
+}

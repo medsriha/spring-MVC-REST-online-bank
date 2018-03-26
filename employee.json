@@ -1,0 +1,217 @@
+{
+  "config": {
+    "target": "http://localhost:8080",
+    "environments": {
+      "production": {
+        "phases": [
+          {
+            "duration": 15,
+            "arrivalCount": 500
+          }
+        ]
+      },
+      "dev": {
+        "phases": [
+          {
+            "duration": 1,
+            "arrivalRate": 1
+          }
+        ]
+      }
+    },
+    "payload": [
+      {
+        "path": "UserData.csv",
+        "fields": [
+          "fname",
+          "lname",
+          "address",
+          "city",
+          "state",
+          "zip",
+          "email",
+          "username",
+          "password"
+        ],
+        "order": "sequence"
+      },
+      {
+        "path": "deposit.csv",
+        "fields": [
+          "cash"
+        ],
+        "order": "sequence"
+      },
+      {
+        "path": "Portfolio.csv",
+        "fields": [
+          "name",
+          "symbol",
+          "initial_value"
+        ],
+        "order": "sequence"
+      },
+      {
+        "path": "buyFund.csv",
+        "fields": [
+          "cashValue"
+        ],
+        "order": "sequence"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "name": "employee functions",
+      "flow": [
+        {
+          "post": {
+            "url": "/login",
+            "json": {
+              "username": "jadmin",
+              "password": "admin"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "Welcome Jane"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/createCustomerAccount",
+            "json": {
+              "fname": "{{{fname}}}",
+              "lname": "{{lname}}",
+              "address": "{{{address}}}",
+              "city": "{{{city}}}",
+              "state": "{{{state}}}",
+              "zip": "{{{zip}}}",
+              "email": "{{{email}}}",
+              "cash": "10",
+              "username": "{{{username}}}",
+              "password": "{{password}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "{{{fname}}} was registered successfully"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/createCustomerAccount",
+            "json": {
+              "fname": "{{{fname}}}",
+              "lname": "{{lname}}",
+              "address": "{{{address}}}",
+              "city": "{{{city}}}",
+              "state": "{{{state}}}",
+              "zip": "{{{zip}}}",
+              "email": "{{{email}}}",
+              "cash": "10",
+              "username": "{{{username}}}",
+              "password": "{{password}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The input you provided is not valid"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/depositCheck",
+            "json": {
+              "username": "{{{username}}}",
+              "cash": "{{{cash}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The check was successfully deposited"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/createFund",
+            "json": {
+              "name": "{{{name}}}",
+              "symbol": "{{{symbol}}}",
+              "initial_value": "{{{initial_value}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "The fund was successfully created"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/transitionDay",
+            "match": {
+              "json": "$.message",
+              "value": "The fund prices have been successfully recalculated"
+            }
+          }
+        },
+        {
+          "get": {
+            "url": "/viewPortfolio",
+            "match": {
+              "json": "$.message",
+              "value": "You must be a customer to perform this action"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/buyFund",
+            "json": {
+              "symbol": "{{{symbol}}}",
+              "cashValue": "{{{cashValue}}}"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "You must be a customer to perform this action"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/sellFund",
+            "json": {
+              "symbol": "{{{symbol}}}",
+              "numShares": "2"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "You must be a customer to perform this action"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/requestCheck",
+            "json": {
+              "cashValue": "400"
+            },
+            "match": {
+              "json": "$.message",
+              "value": "You must be a customer to perform this action"
+            }
+          }
+        },
+        {
+          "post": {
+            "url": "/logout",
+            "match": {
+              "json": "$.message",
+              "value": "You have been successfully logged out"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
